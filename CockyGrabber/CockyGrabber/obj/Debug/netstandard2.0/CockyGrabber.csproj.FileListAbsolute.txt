@@ -1,0 +1,7 @@
+C:\Users\User\Documents\Void\CockyGrabber\CockyGrabber\CockyGrabber\bin\Debug\netstandard2.0\CockyGrabber.deps.json
+C:\Users\User\Documents\Void\CockyGrabber\CockyGrabber\CockyGrabber\bin\Debug\netstandard2.0\CockyGrabber.dll
+C:\Users\User\Documents\Void\CockyGrabber\CockyGrabber\CockyGrabber\obj\Debug\netstandard2.0\CockyGrabber.AssemblyInfoInputs.cache
+C:\Users\User\Documents\Void\CockyGrabber\CockyGrabber\CockyGrabber\obj\Debug\netstandard2.0\CockyGrabber.AssemblyInfo.cs
+C:\Users\User\Documents\Void\CockyGrabber\CockyGrabber\CockyGrabber\bin\Debug\netstandard2.0\CockyGrabber.pdb
+C:\Users\User\Documents\Void\CockyGrabber\CockyGrabber\CockyGrabber\obj\Debug\netstandard2.0\CockyGrabber.dll
+C:\Users\User\Documents\Void\CockyGrabber\CockyGrabber\CockyGrabber\obj\Debug\netstandard2.0\CockyGrabber.pdb
