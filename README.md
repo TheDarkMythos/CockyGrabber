@@ -87,7 +87,7 @@ foreach(Cookie cookie in grabber.GetCookiesByHostname(".instagram.com", keyToDec
     Console.WriteLine($"{cookieHostname} = {cookieName}: {cookieValue}");
 }
 
-// Get All cookies::
+// Get All cookies:
 foreach(Cookie cookie in grabber.GetAllCookies(keyToDecryptEncrypedDB))
 {
     string cookieHostname = cookie.HostName;
@@ -117,7 +117,7 @@ foreach(Cookie cookie in grabber.GetCookiesByHostname(".instagram.com", keyToDec
     Console.WriteLine($"{cookieHostname} = {cookieName}: {cookieValue}");
 }
 
-// Get All cookies::
+// Get All cookies:
 foreach(Cookie cookie in grabber.GetAllCookies(keyToDecryptEncrypedDB))
 {
     string cookieHostname = cookie.HostName;
