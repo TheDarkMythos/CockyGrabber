@@ -1,5 +1,5 @@
 # CockyGrabber
-A Browser Cookie Grabber C#.NET Library.
+A Browser Cookie Grabber C#.NET Library that you can itegrate in your Projects.
 *(More Supported Browsers in Future!)*
 
 ## Usage:
