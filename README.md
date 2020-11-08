@@ -2,6 +2,10 @@
 A Browser Cookie Grabber C#.NET Library that you can itegrate in your Projects.
 *(More Supported Browsers in Future!)*
 
+## Download: 
+
+For download all necessary packages, you can do from nuget with searching `CockyGrabber` and download the 1.2.0 version. once done, just download the library from the last [release](https://github.com/TheBackdoor/CockyGrabber/releases/download/2.1.0/CockyGrabber.dll).
+
 ## Usage:
 **Import Cockygrabber classes:**</br>
 It's not necessary but it will look better if you import CockyGrabber:
