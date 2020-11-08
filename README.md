@@ -129,6 +129,35 @@ foreach(Cookie cookie in grabber.GetAllCookies(keyToDecryptEncrypedDB))
 </br>
 </br>
 
+Edge Cookie Grabbing:
+</br>
+Edge also encrypts cookies so you need a key here too.
+</br>
+
+```cs
+EdgeGrabber grabber = new EdgeGrabber();
+
+// Get cookies by hostname:
+foreach(Cookie cookie in grabber.GetCookiesByHostname(".instagram.com", keyToDecryptEncrypedDB))
+{
+    string cookieHostname = cookie.HostName;
+    string cookieName = cookie.Name;
+    string cookieValue = cookie.Value;
+    Console.WriteLine($"{cookieHostname} = {cookieName}: {cookieValue}");
+}
+
+// Get All cookies:
+foreach(Cookie cookie in grabber.GetAllCookies(keyToDecryptEncrypedDB))
+{
+    string cookieHostname = cookie.HostName;
+    string cookieName = cookie.Name;
+    string cookieValue = cookie.Value;
+    Console.WriteLine($"{cookieHostname} = {cookieName}: {cookieValue}");
+}
+```
+</br>
+</br>
+
 ## End
 </br>
 Yea thats it for now. Fork/Star/Watch this repo to dont miss new releases!
