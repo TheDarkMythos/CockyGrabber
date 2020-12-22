@@ -6,26 +6,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FirefoxCookiesgrabber
+namespace GrabberExamples
 {
     class Program
     {
         static void Main(string[] args)
         {
-            StringBuilder cookiesfirefox = new StringBuilder();
+            StringBuilder firefoxCookies = new StringBuilder();
 
             FirefoxGrabber fg = new FirefoxGrabber();
             if (fg.CookiesExists())
             {
                 foreach (var item in fg.GetAllCookies())
                 {
-                    cookiesfirefox.AppendLine(item.HostName + " = " + item.Name + ":" + item.Value);
+                    firefoxCookies.AppendLine(item.HostName + " = " + item.Name + ":" + item.Value);
                 }
 
             }
 
-            File.WriteAllText("cookies.txt", cookiesfirefox.ToString());
-            Console.Write("Done !");
+            File.WriteAllText("cookies.txt", firefoxCookies.ToString());
+            Console.WriteLine("Cookies Grabbed and saved Successfully!");
             Console.ReadKey();
         }
     }
